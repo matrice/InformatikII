@@ -3,6 +3,6 @@ Informatik II - Institut für Arbeitsprozesse, Technik und berufliche Bildung (i
 Sommersemester 2012, 01. April bis 30. September 2012
 -----------------------------------------------------
 
-Sie finden hier den Code aus der Veranstaltung. Feel free to fork!
+Wenn Sie nicht wissen, was Sie sonst tun sollen, oder einfach Lust haben weiterzulernen, lösen Sie diese Aufgaben.
 
 
