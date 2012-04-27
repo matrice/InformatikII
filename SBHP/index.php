@@ -1,5 +1,34 @@
 <?php
-    $page = $_GET['p'];
+
+    // Eine Whitelist mit allen Dateien/Navigationspunkten, die wir haben.
+    $navigation = array('home','angebot','team','kontakt','impressum');
+
+    // Prüfung, ob unser Parameter in der URL vorhanden ist und ob der Wert
+    // von p gleichzeitig im Navigationsarray vorhanden ist.
+    if (isset($_GET['p']) && in_array($_GET['p'], $navigation)) {
+        $page = $_GET['p'];
+    } else {
+        $page = 'home';
+    }
+
+    // Funktion, die eine Navigation erzeugt
+    function makeNavigation($data) {
+
+        // Stringvariable zum schrittweisen Zusammenstückeln unserer Navigation
+        $html = '';
+
+        // Schleife, die unser Navigationsarray durchläuft und jedes Mal den
+        // HTML-String um einen neuen Eintrag verlängert.
+        // Dabei steckt in $value immer der aktuelle Wert aus dem Navigationsarray
+        foreach ($data as $key => $value) {
+            $html = $html . '<li><a href="index.php?p=' . $value . '">' . ucfirst($value) . '</a></li>';
+        }
+
+        // Nachdem alle Elemente aus dem Array abgearbeitet wurden, wird der
+        // fertige String an die aufrufende Stelle zurückgegeben.
+        return $html;
+    };
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -18,11 +47,12 @@
             <div id="container">
                 <div id="navcontainer">
                     <ul>
-                        <li><a href="index.php?p=home">Home</a></li>
-                        <li><a href="index.php?p=angebot">Angebot</a></li>
-                        <li><a href="index.php?p=team">Team</a></li>
-                        <li><a href="index.php?p=kontakt">Kontakt</a></li>
-                        <li><a href="index.php?p=impressum">Impressum</a></li>
+                        <?php
+                                // Aufruf der Funktion, die unsere Navigation an dieser
+                                // Stelle generieren soll. Der Rückgabewert wird
+                                // mit echo() im Browser ausgegeben.
+                                echo makeNavigation($navigation);
+                        ?>
                     </ul>
                 </div>
 
