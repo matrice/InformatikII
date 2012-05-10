@@ -3,6 +3,9 @@
     // Starten oder Fortsetzen einer Session bei jedem Aufruf der Seite
     session_start();
 
+    // Initialisierung des Session-Variable
+    if (!isset($_SESSION['loggedIn'])) $_SESSION['loggedIn'] = null;
+
     // Simulation des Zustands "eingeloggt". Später werden wir diesen Schalter
     // mit einem Login-Formular umsetzen.
     if (isset($_GET['l']) && $_GET['l'] === '1') {
