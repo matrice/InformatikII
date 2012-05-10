@@ -1,27 +1,86 @@
 <?php
 
+    // Starten oder Fortsetzen einer Session bei jedem Aufruf der Seite
+    session_start();
+
+    // Simulation des Zustands "eingeloggt". Später werden wir diesen Schalter
+    // mit einem Login-Formular umsetzen.
+    if (isset($_GET['l']) && $_GET['l'] === '1') {
+        // Ab jetzt gilt der User als "eingeloggt".
+        $_SESSION['loggedIn'] = true;
+    }
+
+    if (isset($_GET['l']) && $_GET['l'] === '0') {
+        // Ab jetzt gilt der User als "eingeloggt".
+        $_SESSION['loggedIn'] = false;
+    }
+
     // Eine Whitelist mit allen Dateien/Navigationspunkten, die wir haben.
-    $navigation = array('home','angebot','team','kontakt','impressum');
+    // Komplexer als bisher, das dritte Feld in der zweiten Dimension signalisiert,
+    // ob die Seite nur eingeloggten Usern angezeigt wird (true).
+    $navigation = array(
+                'home' => array(
+                                    'Home',
+                                    'Startseite',
+                                    false
+                          ),
+                'angebot' => array(
+                                    'Angebot',
+                                    'Unser Angebot von Blumen und Tannenbäumen aus zweiter Hand',
+                                    false
+                          ),
+                'kontakt' => array(
+                                    'Kontakt',
+                                    'Wir sind rund um die Uhr für Sie da.',
+                                    false
+                          ),
+                'impressum' => array(
+                                    'Impressum',
+                                    'Verklagen Sie uns! Wir haben gute Anwälte.',
+                                    false
+                          ),
+                'admin' => array(
+                                    'Admin',
+                                    'Du kommst hier net rein.',
+                                    true
+                          )
+                );
 
     // Prüfung, ob unser Parameter in der URL vorhanden ist und ob der Wert
     // von p gleichzeitig im Navigationsarray vorhanden ist.
-    if (isset($_GET['p']) && in_array($_GET['p'], $navigation)) {
-        $page = $_GET['p'];
+    // Auch hier neu: array_keys(), eine Funktion, die aus den Schlüsseln eines assoziativen Arrays
+    // ein neues, "flaches" Array macht.
+    if (isset($_GET['p']) && in_array($_GET['p'], array_keys($navigation))) {
+
+        if ($navigation[$_GET['p']][2] === true && $_SESSION['loggedIn'] === false) {
+            $page = 'home';
+        } else {
+            $page = $_GET['p'];
+        }
+
     } else {
         $page = 'home';
     }
 
     // Funktion, die eine Navigation erzeugt
-    function makeNavigation($data) {
+    // Es wird auch der Wert der aktuellen Seite übergeben
+    function makeNavigation($data, $p) {
 
         // Stringvariable zum schrittweisen Zusammenstückeln unserer Navigation
         $html = '';
+        $act = ' id="active"';
 
         // Schleife, die unser Navigationsarray durchläuft und jedes Mal den
         // HTML-String um einen neuen Eintrag verlängert.
         // Dabei steckt in $value immer der aktuelle Wert aus dem Navigationsarray
         foreach ($data as $key => $value) {
-            $html = $html . '<li><a href="index.php?p=' . $value . '">' . ucfirst($value) . '</a></li>';
+
+            // "Wenn der User nicht eingeloggt ist, der Menüeintrag aber verlangt,
+            // dass er eingeloggt sein muss, dann setze die Schleife umgehend fort."
+            if ($_SESSION['loggedIn'] === false && $value[2] === true) continue;
+
+            $html = $html . '<li' . (($key == $p) ? $act : '') .  '><a href="index.php?p=' . $key . '">' . ucfirst($value[0]) . '</a></li>';
+
         }
 
         // Nachdem alle Elemente aus dem Array abgearbeitet wurden, wird der
@@ -40,7 +99,13 @@
     </head>
 
     <body>
-
+        <p id="login">
+            <?php if ($_SESSION['loggedIn']) : ?>
+                <a href="index.php?l=0">Logout</a>
+            <?php else: ?>
+                <a href="index.php?l=1">Login</a>
+            <?php endif; ?>
+        </p>
         <h1><a href="index.php">Secondhandblumen Petersen</a></h1>
 
         <div id="wrapper">
@@ -51,7 +116,8 @@
                                 // Aufruf der Funktion, die unsere Navigation an dieser
                                 // Stelle generieren soll. Der Rückgabewert wird
                                 // mit echo() im Browser ausgegeben.
-                                echo makeNavigation($navigation);
+                                // Es wird auch der Wert der aktuellen Seite übergeben
+                                echo makeNavigation($navigation, $page);
                         ?>
                     </ul>
                 </div>
