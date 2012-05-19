@@ -1,33 +1,17 @@
 <?php
 
-    // Eine Whitelist mit allen Dateien/Navigationspunkten, die wir haben.
-    $navigation = array('home','angebot','team','kontakt','impressum');
+    require_once 'navigation.inc.php';
+    require_once 'functions.inc.php';
 
     // Prüfung, ob unser Parameter in der URL vorhanden ist und ob der Wert
     // von p gleichzeitig im Navigationsarray vorhanden ist.
-    if (isset($_GET['p']) && in_array($_GET['p'], $navigation)) {
+    if (isset($_GET['p']) && in_array($_GET['p'], array_keys($navigation))) {
         $page = $_GET['p'];
     } else {
         $page = 'home';
     }
 
-    // Funktion, die eine Navigation erzeugt
-    function makeNavigation($data) {
 
-        // Stringvariable zum schrittweisen Zusammenstückeln unserer Navigation
-        $html = '';
-
-        // Schleife, die unser Navigationsarray durchläuft und jedes Mal den
-        // HTML-String um einen neuen Eintrag verlängert.
-        // Dabei steckt in $value immer der aktuelle Wert aus dem Navigationsarray
-        foreach ($data as $key => $value) {
-            $html = $html . '<li><a href="index.php?p=' . $value . '">' . ucfirst($value) . '</a></li>';
-        }
-
-        // Nachdem alle Elemente aus dem Array abgearbeitet wurden, wird der
-        // fertige String an die aufrufende Stelle zurückgegeben.
-        return $html;
-    };
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -51,13 +35,17 @@
                                 // Aufruf der Funktion, die unsere Navigation an dieser
                                 // Stelle generieren soll. Der Rückgabewert wird
                                 // mit echo() im Browser ausgegeben.
-                                echo makeNavigation($navigation);
+                                echo makeNavigation($navigation, $page, 0);
                         ?>
+                    </ul>
+                    <ul id="subnavi">
+                        <?php echo makeNavigation($navigation, $page, 1); ?>
                     </ul>
                 </div>
 
                 <!-- Content-Bereich -->
                 <?php include $page . '.php'; ?>
+
 
             </div>
         </div>

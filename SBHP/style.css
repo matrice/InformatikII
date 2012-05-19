@@ -84,6 +84,12 @@ p {
   color: #fff;
 }
 
+/* Unternavigation */
+
+#subnavi li.active {
+    font-weight: bold;
+}
+
 /* Kontaktformular */
 form#kontaktform dt {
     clear: left;
