@@ -3,6 +3,10 @@
     // Starten oder Fortsetzen einer Session bei jedem Aufruf der Seite
     session_start();
 
+    if (!isset($_SESSION['loggedIn'])) {
+        $_SESSION['loggedIn'] = false;
+    }
+
     // Simulation des Zustands "eingeloggt". Später werden wir diesen Schalter
     // mit einem Login-Formular umsetzen.
     if (isset($_GET['l']) && $_GET['l'] === '1') {
@@ -11,7 +15,7 @@
     }
 
     if (isset($_GET['l']) && $_GET['l'] === '0') {
-        // Ab jetzt gilt der User als "eingeloggt".
+        // Ab jetzt gilt der User als "ausgeloggt".
         $_SESSION['loggedIn'] = false;
     }
 
@@ -77,7 +81,7 @@
 
             // "Wenn der User nicht eingeloggt ist, der Menüeintrag aber verlangt,
             // dass er eingeloggt sein muss, dann setze die Schleife umgehend fort."
-            if ($_SESSION['loggedIn'] === false && $value[2] === true) continue;
+            if (@$_SESSION['loggedIn'] === false && $value[2] === true) continue;
 
             $html = $html . '<li' . (($key == $p) ? $act : '') .  '><a href="index.php?p=' . $key . '">' . ucfirst($value[0]) . '</a></li>';
 
@@ -100,7 +104,7 @@
 
     <body>
         <p id="login">
-            <?php if ($_SESSION['loggedIn']) : ?>
+            <?php if (@$_SESSION['loggedIn']) : ?>
                 <a href="index.php?l=0">Logout</a>
             <?php else: ?>
                 <a href="index.php?l=1">Login</a>
