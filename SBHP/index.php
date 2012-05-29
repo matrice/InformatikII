@@ -1,13 +1,17 @@
 <?php
 
     // Starten oder Fortsetzen einer Session bei jedem Aufruf der Seite
+    // Recherchieren Sie auf der Seite php.net zu dieser Funktion und ihren Verwandten!
     session_start();
 
     // Initialisierung des Session-Variable
-    if (!isset($_SESSION['loggedIn'])) $_SESSION['loggedIn'] = null;
+    if (!isset($_SESSION['loggedIn'])) {
+        $_SESSION['loggedIn'] = null;
+    }
 
-    // Simulation des Zustands "eingeloggt". Später werden wir diesen Schalter
-    // mit einem Login-Formular umsetzen.
+    // Simulation des Zustands "eingeloggt". Sobald Sie Ihr Login-Formular korrekt auswerten können,
+    // können Sie diese GET-Variable verwerfen. Die folgenden Werte true/false sind werden dann
+    // in Abhängigkeit von ihrer Anmeldelogik gesetzt.
     if (isset($_GET['l']) && $_GET['l'] === '1') {
         // Ab jetzt gilt der User als "eingeloggt".
         $_SESSION['loggedIn'] = true;
@@ -55,6 +59,8 @@
     // ein neues, "flaches" Array macht.
     if (isset($_GET['p']) && in_array($_GET['p'], array_keys($navigation))) {
 
+        // Verhindert, dass eine per Login geschützte Seite aufgerufen werden kann,
+        // wenn man nicht eingeloggt ist.
         if ($navigation[$_GET['p']][2] === true && $_SESSION['loggedIn'] === false) {
             $page = 'home';
         } else {
@@ -82,6 +88,8 @@
             // dass er eingeloggt sein muss, dann setze die Schleife umgehend fort."
             if ($_SESSION['loggedIn'] === false && $value[2] === true) continue;
 
+            // Verwendung des "Trinitätsoperators": http://php.net/manual/de/language.operators.comparison.php ,
+            // um den aktiven Link durch die Vergabe einer ID zu erzeugen.
             $html = $html . '<li' . (($key == $p) ? $act : '') .  '><a href="index.php?p=' . $key . '">' . ucfirst($value[0]) . '</a></li>';
 
         }
@@ -132,4 +140,3 @@
         </div>
     </body>
 </html>
-
