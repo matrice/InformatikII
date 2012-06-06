@@ -3,6 +3,9 @@
     // Starten oder Fortsetzen einer Session bei jedem Aufruf der Seite
     session_start();
 
+    require_once 'lib/sbhp/func.makenavigation.inc.php';
+    require_once 'lib/sbhp/func.printoffer.inc.php';
+
     // Initialisierung des Session-Variable
     if (!isset($_SESSION['loggedIn'])) $_SESSION['loggedIn'] = null;
 
@@ -65,31 +68,9 @@
         $page = 'home';
     }
 
-    // Funktion, die eine Navigation erzeugt
-    // Es wird auch der Wert der aktuellen Seite übergeben
-    function makeNavigation($data, $p) {
-
-        // Stringvariable zum schrittweisen Zusammenstückeln unserer Navigation
-        $html = '';
-        $act = ' id="active"';
-
-        // Schleife, die unser Navigationsarray durchläuft und jedes Mal den
-        // HTML-String um einen neuen Eintrag verlängert.
-        // Dabei steckt in $value immer der aktuelle Wert aus dem Navigationsarray
-        foreach ($data as $key => $value) {
-
-            // "Wenn der User nicht eingeloggt ist, der Menüeintrag aber verlangt,
-            // dass er eingeloggt sein muss, dann setze die Schleife umgehend fort."
-            if ($_SESSION['loggedIn'] === false && $value[2] === true) continue;
-
-            $html = $html . '<li' . (($key == $p) ? $act : '') .  '><a href="index.php?p=' . $key . '">' . ucfirst($value[0]) . '</a></li>';
-
-        }
-
-        // Nachdem alle Elemente aus dem Array abgearbeitet wurden, wird der
-        // fertige String an die aufrufende Stelle zurückgegeben.
-        return $html;
-    };
+    if ( $page == 'angebot' && ( isset($_GET['print']) && $_GET['print'] == '1') ) {
+        printOffer();
+    }
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"

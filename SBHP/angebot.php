@@ -1,4 +1,4 @@
-<h2>Angebot</h2>
+<h2>Angebot<span><a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])?>?p=angebot&print=1">Drucken</a></span></h2>
 <table id="angebot">
     <tr class="even">
         <th class="first-column">Name</th>
