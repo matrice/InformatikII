@@ -12,9 +12,21 @@
     // Simulation des Zustands "eingeloggt". Sobald Sie Ihr Login-Formular korrekt auswerten können,
     // können Sie diese GET-Variable verwerfen. Die folgenden Werte true/false sind werden dann
     // in Abhängigkeit von ihrer Anmeldelogik gesetzt.
-    if (isset($_GET['l']) && $_GET['l'] === '1') {
-        // Ab jetzt gilt der User als "eingeloggt".
-        $_SESSION['loggedIn'] = true;
+    if (isset($_POST['login-send'])) {
+
+        // Prüfen, ob Credentials eingetragen wurden
+        if ( $_POST['bn'] != '' && $_POST['pw'] != '' ) {
+
+            // Prüfen, ob die Credentials für einen Authentifizierung taugen
+            if ( $_POST['bn'] == 'dieter' && $_POST['pw'] == '1234') {
+                // Ab jetzt gilt der User als "eingeloggt".
+                $_SESSION['loggedIn'] = true;
+            } else {
+                // Fehlermeldungen wären hier zu implementieren
+            }
+        } else {
+            // Fehlermeldungen wären hier zu implementieren
+        }
     }
 
     if (isset($_GET['l']) && $_GET['l'] === '0') {
@@ -114,7 +126,11 @@
             <?php if ($_SESSION['loggedIn']) : ?>
                 <a href="index.php?l=0">Logout</a>
             <?php else: ?>
-                <a href="index.php?l=1">Login</a>
+                <form action="index.php" method="post" id="login-form">
+                    <input type="text" name="bn" id="bn" value="Benutzername" onfocus="this.value = ''" />
+                    <input type="text" name="pw" id="pw" value="Passwort" onfocus="this.value = ''; this.type = 'password'" />
+                    <input type="submit" name="login-send" id="login-send" value="Login" />
+                </form>
             <?php endif; ?>
         </p>
         <h1><a href="index.php">Secondhandblumen Petersen</a></h1>
